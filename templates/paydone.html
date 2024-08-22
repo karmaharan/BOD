@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Payment Status</title>
+    <!-- Add your CSS files here -->
+</head>
+<body>
+    <h1>Payment Status</h1>
+    <p>Thank you, {{ user.name }}!</p>
+    
+    {% if payment_status is not none %}
+        {% if payment_status %}
+            <p>Payment was successful.</p>
+        {% else %}
+            <p>Payment failed or is pending.</p>
+        {% endif %}
+    {% else %}
+        <p>No payment ID provided.</p>
+    {% endif %}
+    
+    <!-- Add any additional content or links here -->
+</body>
+</html>

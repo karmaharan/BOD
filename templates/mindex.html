@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Before Interview V1 (Mobile)</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Roboto:wght@300;400;700&display=swap');
+
+        body, html {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #e6f1ff;
+            overflow-x: hidden;
+            background-color: #0049b6;
+        }
+
+        .content {
+            background: #0049b6;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            color: #ffffff;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+
+        h1, h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(51, 51, 51, 0.7);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        input[type="file"], input[type="text"], input[type="submit"] {
+            margin: 0.5rem 0;
+            padding: 0.75rem;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: rgba(0, 0, 0, 0.658);
+            border: 2px solid #00000000;
+            color: #ffffff;
+            border-radius: 5px;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        input[type="submit"] {
+            background-color: #000000;
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        #results {
+            margin-top: 2rem;
+            text-align: left;
+            background: rgba(23, 42, 69, 0.7);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.4);
+            max-height: 57vh;
+            overflow-y: auto;
+            width: 96%;
+        }
+
+        #results pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 73, 182, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+            backdrop-filter: blur(5px);
+        }
+
+        .login-message {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .login-message h2 {
+            color: #0049b6;
+            margin-bottom: 1rem;
+        }
+
+        .login-message p {
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .login-button {
+            background-color: #0049b6;
+            color: #ffffff;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .login-button:hover {
+            background-color: #003285;
+        }
+
+        .upload-button {
+            background-color: #003285;
+            color: #ffffff;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: background-color 0.3s, transform 0.3s;
+            display: inline-block;
+        }
+
+        .upload-button:hover {
+            background-color: #ffffff;
+            transform: scale(1.05);
+            color: black;
+        }
+
+        #printButton {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        #printButton:hover {
+            background-color: #45a049;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #results, #results * {
+                visibility: visible;
+            }
+            #results {
+                position: absolute;
+                left: 0;
+                top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav style="position: fixed; width: 100%; top: 0; background-color: #0049b6; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); z-index: 1000; padding: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center;">
+                <img src="https://i.ibb.co/MC4BzT3/logo.png" alt="Logo" style="width: 30px; height: 30px; margin-right: 0.5rem;" />
+                <div style="font-family: 'Orbitron', sans-serif; color: #ffffff; font-size: 1.2rem; letter-spacing: 1px;">
+                    BeforeInterview
+                </div>
+            </div>
+            <div style="display: flex; align-items: center;">
+                {% if user %}
+                <div style="color: #ffffff; font-family: 'Roboto', sans-serif; margin-right: 0.5rem; font-size: 0.9rem;">
+                    Hello, {{ user.name }}!
+                </div>
+                <a href="/logout" style="text-decoration: none;">
+                    <button style="background-color: #ffffff; color: #0049b6; border: none; padding: 0.5rem 1rem; font-family: 'Roboto', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-radius: 5px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem;">
+                        Logout
+                    </button>
+                </a>
+                {% else %}
+                <a href="/login" style="text-decoration: none;">
+                    <button style="background-color: #ffffff; color: #0049b6; border: none; padding: 0.5rem 1rem; font-family: 'Roboto', sans-serif; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; border-radius: 5px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem;">
+                        Login
+                    </button>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="content" style="margin-top: 4rem; text-align: center;">
+        <h1>BIAI (before interview artificial intelligence)</h1>
+        <p>not getting selected for an interview? want to BOOST your CV?</p>
+        <p>Tune your resume "BEFORE INTERVIEW"</p>
+    </div>
+
+    <div class="content" style="margin-top: 2rem;">
+        <h2>Tune your CV to get your desired and deserving job.</h2>
+        <p>Take control of your career trajectory! Upload your resume, set your job targets, and let our advanced AI navigate you through the job market with precision.</p>
+    </div>
+
+    <div class="content" style="margin-top: 2rem;">
+        {% if not user %}
+        <div class="login-overlay">
+            <div class="login-message">
+                <h2>Login Required</h2>
+                <p>You need to log in to use this feature.</p>
+                <a href="/login">
+                    <button class="login-button">Log In</button>
+                </a>
+            </div>
+        </div>
+        {% endif %}
+        <h2>Launch Your Career Analysis</h2>
+        <form id="resumeForm" method="POST" enctype="multipart/form-data">
+            <label for="file" class="upload-button">Upload Your Resume</label>
+            <input type="file" id="file" name="file" accept=".pdf, .jpg, .jpeg, .png" required><br><br>
+            <label for="job_title">Set Your Job Target:</label><br>
+            <input type="text" id="job_title" name="job_title" required><br><br>
+            <input type="submit" value="Launch Analysis">
+        </form>
+    </div>
+
+    <div class="content" style="margin-top: 2rem;">
+        <h2>The Personalized Report</h2>
+        <p>Get a detailed analysis of your strengths, weaknesses, and job opportunities. Unlock new career paths and take the first step towards success!</p>
+    </div>
+
+    <div class="content" id="Resultz" style="display: none; margin-top: 2rem;">
+        <div id="results"></div>
+        <button class="no-print" id="printButton" onclick="printResults()">Print</button>
+    </div>
+
+    <script>
+        function printResults() {
+            window.print();
+        }
+
+        document.getElementById('resumeForm').addEventListener('submit', async function(event) {
+    event.preventDefault();  // Prevent form from submitting the default way
+
+    {% if not user %}
+        alert('You need to log in to use this feature.');
+        return;
+    {% endif %}
+
+    // Show the spinner
+    document.getElementById('spinner-div').style.display = 'block';
+
+    const formData = new FormData(document.getElementById('resumeForm'));
+
+    try {
+        const response = await fetch('/analyze_resume', {
+            method: 'POST',
+            body: formData
+        });
+
+        // Check for unauthorized status code
+        if (response.status === 401) {
+            document.getElementById('results').innerText = 'Error: You need to log in to access this feature.';
+            return;
+        }
+
+        // Check if the response is JSON
+        const contentType = response.headers.get('Content-Type');
+        if (contentType && contentType.includes('application/json')) {
+            const data = await response.json();
+
+            if (data.error) {
+                document.getElementById('results').innerText = `Error: ${data.error}`;
+                return;
+            }
+
+            // Check if the user is in a queue
+            if (data.queue_position !== undefined) {
+                document.getElementById('results').innerHTML = `
+                    <strong>Queue Status:</strong> You are in position ${data.queue_position} of ${data.total_queue}. Please wait for your analysis to be processed.
+                `;
+                return;
+            }
+
+            // If analysis results are available, display them
+            const formatList = (items) => {
+                if (Array.isArray(items)) {
+                    return items.map(item => `<li>${item}</li>`).join('');
+                }
+                return '<li>No data available</li>';
+            };
+
+            document.getElementById('results').innerHTML = `
+                <strong>Full Analysis:</strong> <pre>${data.full_analysis || 'No detailed analysis available'}</pre>
+                <strong>Potential Companies in India:</strong> <pre>${data.potential_companies_india || 'No data available'}</pre>
+                <strong>Potential Companies Globally:</strong> <pre>${data.potential_companies_global || 'No data available'}</pre>
+                <strong>India Job Market Similarity:</strong> <pre>${data.india_job_market_similarity || 'No data available'}</pre>
+                <strong>Global Job Market Similarity:</strong> <pre>${data.global_job_market_similarity || 'No data available'}</pre>
+                <strong>Example Similarity:</strong> <pre>${data.example_similarity || 'No data available'}</pre>
+            `;
+
+            // Scroll to results
+            gsap.to(window, {duration: 1, scrollTo: "#results"});
+        } else {
+            throw new Error('Unexpected response type');
+        }
+    } catch (error) {
+        document.getElementById('results').innerText = `Error: ${error.message}`;
+    } finally {
+        // Hide the spinner
+        document.getElementById('spinner-div').style.display = 'none';
+
+        // Show the results section
+        document.getElementById('Resultz').style.display = 'block';
+    }
+});
+    </script>
+</body>
+</html>
